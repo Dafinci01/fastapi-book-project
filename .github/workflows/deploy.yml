@@ -1,27 +1,22 @@
-name: CI
+name: Deploy to Railway
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
 
 jobs:
-  test:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Deploy to Railway
+        uses: railwayapp/railway-action@v1
         with:
-          python-version: '3.9'  # Adjust to your required Python version
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest
-
-      - name: Run tests
-        run: pytest
+          railwayToken: b793aaf4-dfc7-4cd1-8c58-2ca46569cdaf
+          # Optionally, you can also provide other inputs such as:
+          # projectId: <YOUR_PROJECT_ID>
+          # service: <YOUR_SERVICE_NAME>
 
