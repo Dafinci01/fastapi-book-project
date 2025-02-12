@@ -17,5 +17,5 @@ jobs:
       - name: Trigger Deployment on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway deploy --service sincere-spirit
+        run: railway deploy --service fastapi-book-project
 
