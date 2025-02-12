@@ -15,7 +15,7 @@ jobs:
       - name: Deploy to Railway
         uses: devtomio/action-railway@v1.1.4
         with:
-          railwayToken: b793aaf4-dfc7-4cd1-8c58-2ca46569cdaf
+          railway_token: ${{ secrets.b793aaf4-dfc7-4cd1-8c58-2ca46569cdaf }}
           # Optionally, you can also provide other inputs such as:
           # projectId: <YOUR_PROJECT_ID>
           # service: <YOUR_SERVICE_NAME>
