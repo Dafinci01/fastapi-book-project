@@ -10,9 +10,9 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the application code (note the folder change from ./app to ./api)
-COPY ./api /app/api
+# Copy the application code
+COPY . /app
 
-# Start the application using Uvicorn (adjust the module path if needed)
+# Start the application using Uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
