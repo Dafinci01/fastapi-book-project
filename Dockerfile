@@ -1,5 +1,5 @@
 # Use a lightweight Python image
-FROM python:3.10-slim
+FROM python:3.10
 
 # Install system dependencies (nginx and supervisor)
 RUN apt-get update && \
@@ -23,7 +23,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Expose port 80 (Nginx will listen on 80)
-EXPOSE 80
+EXPOSE 80  8000
 
 # Start Supervisor to run both FastAPI (via uvicorn) and Nginx
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
