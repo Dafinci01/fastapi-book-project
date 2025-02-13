@@ -3,8 +3,8 @@ services:
   fastapi:
     build: .
     container_name: fastapi-app
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
     environment:
       - APP_PORT=8000
 
