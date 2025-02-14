@@ -1,4 +1,4 @@
-name: Deploy FastAPI to AWS
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,7 +6,26 @@ on:
       - main
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
   deploy:
+    needs: test  # 🟢 This ensures tests must pass before deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,7 +34,7 @@ jobs:
       - name: Deploy to AWS EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.ubuntu@18.117.143.111 }}
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
