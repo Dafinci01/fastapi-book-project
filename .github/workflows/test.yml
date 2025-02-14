@@ -1,3 +1,11 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
   test:
     runs-on: ubuntu-latest
     steps:
@@ -13,10 +21,10 @@
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-timeout
+          pip install pytest pytest-cov
 
       - name: Run tests
         run: |
-          pytest --maxfail=1 --timeout=30 -v || { echo "Tests failed"; exit 1; }
-        continue-on-error: false  # Ensures pipeline stops on failure
+          pytest --maxfail=1 -v || exit 1  # Forces failure on first invalid code
+        continue-on-error: false  # Ensures CI fails immediately
 
