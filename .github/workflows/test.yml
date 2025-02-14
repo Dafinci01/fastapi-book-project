@@ -25,6 +25,6 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --maxfail=1 --timeout=30 -v
-        continue-on-error: false  # Ensures pipeline stops on failure
+          pytest --maxfail=1 --timeout=30 -v || exit 1
+        continue-on-error: false  # Stops pipeline on failure
 
