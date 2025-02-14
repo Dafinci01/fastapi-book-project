@@ -24,6 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-rerunfailures
+          pytest --version  # Verify pytest installation
 
       - name: Run Pytest
         run: pytest --maxfail=5 --disable-warnings -v --reruns 3
@@ -37,9 +38,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Set Up SSH Key
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
       - name: Deploy Application
         run: |
           echo "Deploying application..."
-          # Replace the following command with your actual deployment command
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} 'cd /home/ubuntu/your-repo && git pull origin main && sudo systemctl restart fastapi-app'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /home/ubuntu/your-repo
+          git pull origin main
+          sudo systemctl restart fastapi-app
+          EOF
 
