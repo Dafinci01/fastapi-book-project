@@ -21,8 +21,9 @@ COPY . /app
 COPY ./nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expose port 8081 (for Nginx)
+# Expose only Nginx port
 EXPOSE 8081
 
 # Start Supervisor to manage Nginx and FastAPI
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+
