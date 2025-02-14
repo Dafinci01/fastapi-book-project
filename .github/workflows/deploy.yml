@@ -19,10 +19,14 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest pytest-timeout
 
       - name: Run tests
-        run: pytest
+        run: |
+          pytest --maxfail=1 --timeout=30 -v
+        continue-on-error: false  # Ensures pipeline stops on failure
 
   deploy:
     needs: test  # Ensure tests pass before deployment
@@ -32,6 +36,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Deploy to AWS EC2
+        if: success()  # Only deploy if tests pass
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -44,3 +49,4 @@ jobs:
             pip install -r requirements.txt
             sudo systemctl restart fastapi.service
             sudo systemctl status fastapi.service
+

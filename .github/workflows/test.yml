@@ -19,8 +19,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest pytest-timeout
 
       - name: Run tests
-        run: pytest
+        run: |
+          pytest --maxfail=1 --timeout=30 -v
+        continue-on-error: false  # Ensures pipeline stops on failure
 
