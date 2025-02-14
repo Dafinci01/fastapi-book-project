@@ -25,7 +25,7 @@ jobs:
         run: pytest
 
   deploy:
-    needs: test  # 🟢 This ensures tests must pass before deployment
+    needs: test  # Ensure tests pass before deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,9 +38,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd /home/ubuntu/your-repo
+            cd /home/ubuntu/fastapi-book-project
             git pull origin main
             source venv/bin/activate
             pip install -r requirements.txt
-            sudo systemctl restart nginx
+            sudo systemctl restart nginx || sudo service nginx restart
+            sudo supervisorctl reread
+            sudo supervisorctl update
+            sudo supervisorctl restart fastapi
 
