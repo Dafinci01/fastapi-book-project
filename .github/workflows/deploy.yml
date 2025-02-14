@@ -42,8 +42,5 @@ jobs:
             git pull origin main
             source venv/bin/activate
             pip install -r requirements.txt
-            sudo systemctl restart nginx || sudo service nginx restart
-            sudo supervisorctl reread
-            sudo supervisorctl update
-            sudo supervisorctl restart fastapi
-
+            sudo systemctl restart fastapi.service
+            sudo systemctl status fastapi.service
