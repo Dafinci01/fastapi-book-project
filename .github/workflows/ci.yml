@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  ci:  # Change from "test" to "ci" (bot might require this name)
+  ci:  # Ensuring job name is 'ci' if required by the bot
     runs-on: ubuntu-latest
 
     steps:
@@ -24,8 +24,8 @@ jobs:
       - name: Install Dependencies
         run: |
           pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt pytest
 
-      - name: Run tests
-        run: pytest -q  # Use quiet mode for faster response to the bot
+      - name: Run test  # Fixed name as suggested
+        run: pytest
 
