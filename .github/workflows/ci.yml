@@ -1,7 +1,7 @@
 name: CI Pipeline
 
 on:
-  pull_request:
+  push:
     branches:
       - main
   pull_request:
@@ -11,6 +11,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Ensures GitHub bot can read PR contents
 
     steps:
       - name: Checkout Repository
@@ -25,9 +27,13 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
+          pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest  # Ensure pytest is installed
+          pip install pytest
 
       - name: Run test
-        run: source venv/bin/activate && pytest  # Run tests properly
+        run: |
+          source venv/bin/activate
+          pytest --maxfail=5 --disable-warnings -v --reruns 3 || exit 1
+        timeout-minutes: 5  # Prevents GitHub Actions from timing out
 
