@@ -5,7 +5,7 @@ def test_stage2_endpoint_unavailable():
     This test checks that the /stage2 endpoint is not accessible.
     It assumes that your application is running locally (e.g., at http://localhost:8000).
     """
-    url = "http://localhost:8000/stage2"
+    url = "http://127.0.0.1:8000/stage2"
     try:
         response = requests.get(url, timeout=5)
     except requests.exceptions.RequestException as e:
