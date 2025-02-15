@@ -1,9 +1,6 @@
 name: CI Pipeline
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
@@ -26,7 +23,8 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
+          pip install pytest  # Ensure pytest is installed
 
-      - name: Run tests  # Bot expects "Run test" specifically
-        run: pytest  # Keep it simple
+      - name: Run test
+        run: source venv/bin/activate && pytest  # Run tests properly
 
