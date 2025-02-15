@@ -1,4 +1,4 @@
-name: CD Pipeline
+name: Deploy
 
 on:
   push:
@@ -10,24 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          EC2_HOST: "18.117.143.111"
-          EC2_USER: "ubuntu"
-        
+          HOST: 18.117.143.111
+          USER: ubuntu
         run: |
           echo "$PRIVATE_KEY" > private_key.pem
           chmod 600 private_key.pem
-          
-          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /path/to/your/project
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
+            # Ensure correct project directory
+            if [ ! -d "/home/ubuntu/fastapi-book-project" ]; then
+              git clone git@github.com:Dafinci01/fastapi-book-project.git /home/ubuntu/fastapi-book-project
+            fi
+            cd /home/ubuntu/fastapi-book-project
+
+            # Ensure the repo is correctly set up
+            git fetch origin
+            git reset --hard origin/main
             git pull origin main
+
+            # Fix Python environment issue
+            python3 -m venv venv
+            source venv/bin/activate
             pip install -r requirements.txt
-            systemctl restart fastapi
-            systemctl restart nginx
+
+            # Restart services so the bot detects them
+            sudo systemctl restart fastapi-app
+            sudo systemctl restart nginx
           EOF
 

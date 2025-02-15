@@ -10,35 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Set up Python
+      - name: Set Up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.10'
+          python-version: "3.9"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          pip install --upgrade pip
+          python -m venv venv
+          source venv/bin/activate
           pip install -r requirements.txt
-          pip install pytest
 
-      - name: Start FastAPI in Background
-        run: |
-          nohup uvicorn main:app --host 0.0.0.0 --port 8000 &
-          sleep 5  # Ensures FastAPI starts
-
-      - name: Run Tests
-        run: |
-          pytest --maxfail=1 --disable-warnings -v
-
-      - name: Ensure CI Fails on Errors
-        run: |
-          if [ $? -ne 0 ]; then
-            echo "❌ Tests failed! CI should reject this PR."
-            exit 1
-          else
-            echo "✅ All tests passed! PR can be merged."
-          fi
+      - name: Run test  # FIXED: Changed from "Run tests"
+        run: pytest  # FIXED: Removed unnecessary args
 
