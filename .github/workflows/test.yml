@@ -25,6 +25,6 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --maxfail=1 -v || exit 1  # Forces failure on first invalid code
-        continue-on-error: false  # Ensures CI fails immediately
+          pytest --maxfail=1 -v || exit 1  # Immediately fails on the first error
+        continue-on-error: false  # Ensures CI fails without delay
 
