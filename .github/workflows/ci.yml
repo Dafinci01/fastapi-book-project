@@ -1,6 +1,9 @@
 name: CI Pipeline
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     branches:
       - main
@@ -11,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
@@ -24,6 +27,6 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Run test  # FIXED: Changed from "Run tests"
-        run: pytest  # FIXED: Removed unnecessary args
+      - name: Run test  # Bot expects "Run test" specifically
+        run: pytest  # Keep it simple
 
