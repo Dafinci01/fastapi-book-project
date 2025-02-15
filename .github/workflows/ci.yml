@@ -26,6 +26,6 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Tests
+      - name: Run tests
         run: pytest -q  # Use quiet mode for faster response to the bot
 
