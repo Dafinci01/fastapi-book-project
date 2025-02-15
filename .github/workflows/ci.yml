@@ -27,6 +27,6 @@ jobs:
           source venv/bin/activate
           pip install -r requirements.txt
 
-      - name: Run test  # Bot expects "Run test" specifically
+      - name: Run tests  # Bot expects "Run test" specifically
         run: pytest  # Keep it simple
 
