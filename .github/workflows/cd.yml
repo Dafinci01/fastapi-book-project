@@ -1,4 +1,4 @@
-name: Deploy
+name: CD - Deploy to AWS
 
 on:
   push:
@@ -10,36 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Deploy to EC2
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
-          HOST: 18.117.143.111
-          USER: ubuntu
-        run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST << 'EOF'
-            # Ensure correct project directory
-            if [ ! -d "/home/ubuntu/fastapi-book-project" ]; then
-              git clone git@github.com:Dafinci01/fastapi-book-project.git /home/ubuntu/fastapi-book-project
-            fi
-            cd /home/ubuntu/fastapi-book-project
-
-            # Ensure the repo is correctly set up
-            git fetch origin
-            git reset --hard origin/main
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd fastapi-book-project
+            git stash
             git pull origin main
-
-            # Fix Python environment issue
-            python3 -m venv venv
-            source venv/bin/activate
-            pip install -r requirements.txt
-
-            # Restart services so the bot detects them
-            sudo systemctl restart fastapi-app
-            sudo systemctl restart nginx
-          EOF
+            # Stop existing containers (if any)
+            docker-compose down || true
+            # Rebuild and run containers
+            docker-compose up -d --build
+            docker ps
 

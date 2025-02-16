@@ -1,17 +1,13 @@
-version: "3.8"
-services:
-  app:
-    build: .
-    container_name: fastapi-app
-    ports:
-      - "8000:8000"
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - app
-
+# Use a lightweight Python image
+FROM python:3.10-slim
+# Set the working directory
+WORKDIR /app
+# Copy requirements and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+# Copy the FastAPI application code
+COPY . .
+# Expose the application port
+EXPOSE 8000
+# Start the FastAPI server
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
